@@ -54,7 +54,7 @@ module.exports = {
     updateCategory: (req, res) => {
         const categoryId = req.params.categoryId;
 
-        Category.findByIdAndUpdate({categoryId}, req.body).then(() => {
+        Category.findByIdAndUpdate({"_id" : categoryId}, req.body).then(() => {
             res.status(200).json({
                 message: `Category _id: ${categoryId} was updated successfully`
             });
