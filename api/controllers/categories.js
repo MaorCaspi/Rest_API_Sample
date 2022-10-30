@@ -28,7 +28,7 @@ module.exports = {
                 res.status(500).send({
                     'status': 'fail',
                     'error': error.message
-                })
+                });
             } else {
                 res.status(200).json({
                     message: 'The category was created successfully',

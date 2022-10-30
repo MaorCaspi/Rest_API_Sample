@@ -39,7 +39,7 @@ module.exports = {
                     res.status(500).send({
                         'status': 'fail',
                         'error': error.message
-                    })
+                    });
                 } else {
                     res.status(200).json({
                         message: 'The article was created successfully',
@@ -67,9 +67,9 @@ module.exports = {
 
     updateArticle: (req, res) => {
         const articleId = req.params.articleId;
-        Article.findByIdAndUpdate({articleId}, req.body).then(() => {
+        Article.findByIdAndUpdate({"_id" : articleId}, req.body).then(() => {
             res.status(200).json({
-                message: `Article _id: ${categoryId} was updated successfully`
+                message: `Article _id: ${articleId} was updated successfully`
             });
         }).catch(error => {
             res.status(500).json({
@@ -83,7 +83,7 @@ module.exports = {
         const articleId = req.params.articleId;
         Article.deleteOne({_id: articleId}).then(() => {
             res.status(200).json({
-                message: `Article _id: ${categoryId} was deleted successfully`
+                message: `Article _id: ${articleId} was deleted successfully`
             });
         }).catch(error => {
             res.status(500).json({
