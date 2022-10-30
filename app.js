@@ -36,12 +36,6 @@ app.use((req, res, next)=>{ //CORS
 
 // Routes:
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Hello!'
-    });
-});
-
 app.use('/articles', articlesRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/users', usersRoutes);

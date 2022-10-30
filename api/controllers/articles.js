@@ -1,38 +1,48 @@
 const mongoose = require('mongoose');
 const Article = require('../models/article');
+const Category = require('../models/category');
 
 module.exports = {
     getAllArticles: (req, res) => {
-        Article.find().then((articles) => {
+        Article.find().populate('categoryId').then((articles) => {
             res.status(200).json({
                 articles
             });
         }).catch(error => {
             res.status(500).json({
                 'status': 'fail',
-                'error': err.message
+                'error': error.message
             });
         });
     },
 
     createArticle: (req, res) => {
-        const { title, description, content } = req.body;
+        const { title, description, content, categoryId } = req.body;
 
-        const article = new Article({
-            _id: new mongoose.Types.ObjectId(),
-            title,
-            description,
-            content
-        });
+        Category.findById(categoryId).then((category) => {
+            if (!category) {
+                return res.status(404).json({
+                    message: 'Category not found'
+                });
+            }
 
-        article.save().then(() => {
+            const article = new Article({
+                _id: new mongoose.Types.ObjectId(),
+                title,
+                description,
+                content,
+                categoryId
+            });
+
+            return article.save();
+        }).then(() => {
             res.status(200).json({
-                message: 'Created article'
+                message: 'The article was created successfully'
             });
         }).catch(error => {
             res.status(500).json({
                 'status': 'fail',
-                'error': err.message
+                'error': error.message
             });
         });
     },
@@ -40,28 +50,28 @@ module.exports = {
     getArticle: (req, res) => {
         const articleId = req.params.articleId;
 
-        Article.findById(articleId).then((article) => {
+        Article.findById(articleId).populate('categoryId').then((article) => {
             res.status(200).json({
                 article
             });
         }).catch(error => {
             res.status(500).json({
                 'status': 'fail',
-                'error': err.message
+                'error': error.message
             });
         });
     },
 
     updateArticle: (req, res) => {
         const articleId = req.params.articleId;
-        Article.update({_id: articleId}, req.body).then(() => {
+        Article.findByIdAndUpdate({articleId}, req.body).then(() => {
             res.status(200).json({
-                message: `Article _id:${articleId} Updated`
+                message: `Article _id: ${categoryId} was updated successfully`
             });
         }).catch(error => {
             res.status(500).json({
                 'status': 'fail',
-                'error': err.message
+                'error': error.message
             });
         });
     },
@@ -70,12 +80,12 @@ module.exports = {
         const articleId = req.params.articleId;
         Article.deleteOne({_id: articleId}).then(() => {
             res.status(200).json({
-                message: `Article _id:${articleId} Deleted`
+                message: `Article _id: ${categoryId} was deleted successfully`
             });
         }).catch(error => {
             res.status(500).json({
                 'status': 'fail',
-                'error': err.message
+                'error': error.message
             });
         });
     }
