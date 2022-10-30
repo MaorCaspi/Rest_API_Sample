@@ -34,15 +34,18 @@ module.exports = {
                 categoryId
             });
 
-            return article.save();
-        }).then(() => {
-            res.status(200).json({
-                message: 'The article was created successfully'
-            });
-        }).catch(error => {
-            res.status(500).json({
-                'status': 'fail',
-                'error': error.message
+            article.save((error, newArticle) => {
+                if (error) {
+                    res.status(500).send({
+                        'status': 'fail',
+                        'error': error.message
+                    })
+                } else {
+                    res.status(200).json({
+                        message: 'The article was created successfully',
+                        newArticle
+                    });
+                }
             });
         });
     },
